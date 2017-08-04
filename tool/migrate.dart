@@ -20,6 +20,6 @@ main(List<String> args) async {
     ],
   );
 
-  // Run a `up`, `rollback`, or `reset` command...
+  // Run a `up`, `rollback`, `reset`, or `refresh` command...
   await runMigrations(migrationRunner, args);
 }
