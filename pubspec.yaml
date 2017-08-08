@@ -17,6 +17,3 @@ dev_dependencies:
   angel_test: ^1.0.0
   build_runner: ^0.3.0
   test: ^0.12.0
-dependency_overrides:
-  angel_migration_runner:
-    path: ../migration/angel_migration_runner
