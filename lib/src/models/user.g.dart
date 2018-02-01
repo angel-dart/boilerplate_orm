@@ -4,7 +4,6 @@ part of angel.src.models.user;
 
 // **************************************************************************
 // Generator: JsonModelGenerator
-// Target: class _User
 // **************************************************************************
 
 class User extends _User {
@@ -12,16 +11,10 @@ class User extends _User {
   String id;
 
   @override
-  String username;
-
-  @override
   String email;
 
   @override
-  String password;
-
-  @override
-  String salt;
+  String name;
 
   @override
   DateTime createdAt;
@@ -29,22 +22,13 @@ class User extends _User {
   @override
   DateTime updatedAt;
 
-  User(
-      {this.id,
-      this.username,
-      this.email,
-      this.password,
-      this.salt,
-      this.createdAt,
-      this.updatedAt});
+  User({this.id, this.email, this.name, this.createdAt, this.updatedAt});
 
   factory User.fromJson(Map data) {
     return new User(
         id: data['id'],
-        username: data['username'],
         email: data['email'],
-        password: data['password'],
-        salt: data['salt'],
+        name: data['name'],
         createdAt: data['created_at'] is DateTime
             ? data['created_at']
             : (data['created_at'] is String
@@ -59,10 +43,8 @@ class User extends _User {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'username': username,
         'email': email,
-        'password': password,
-        'salt': salt,
+        'name': name,
         'created_at': createdAt == null ? null : createdAt.toIso8601String(),
         'updated_at': updatedAt == null ? null : updatedAt.toIso8601String()
       };

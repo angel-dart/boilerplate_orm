@@ -1,15 +1,12 @@
 import 'package:angel_migration/angel_migration.dart';
 
-class UserMigration extends Migration {
+class FooMigration extends Migration {
   @override
   void up(Schema schema) {
-    schema.create('users', (table) {
+    schema.create('foo', (table) {
       table
         ..serial('id').primaryKey()
-        ..varchar('username')
-        ..varchar('email')
-        ..varchar('password')
-        ..varchar('salt').unique()
+        ..varchar('bar').unique()
         ..date('created_at')
         ..date('updated_at');
     });
@@ -17,6 +14,6 @@ class UserMigration extends Migration {
 
   @override
   void down(Schema schema) {
-    schema.drop('users');
+    schema.drop('foo');
   }
 }

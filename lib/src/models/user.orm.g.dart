@@ -1,8 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// Generator: PostgresORMGenerator
-// Target: class _User
+// Generator: PostgresOrmGenerator
 // **************************************************************************
 
 import 'dart:async';
@@ -51,7 +50,7 @@ class UserQuery {
     var buf = new StringBuffer();
     buf.write(prefix != null
         ? prefix
-        : 'SELECT id, username, email, password, salt, created_at, updated_at FROM "users"');
+        : 'SELECT id, email, name, created_at, updated_at FROM "users"');
     if (prefix == null) {}
     var whereClause = where.toWhereClause();
     if (whereClause != null) {
@@ -93,12 +92,10 @@ class UserQuery {
   static User parseRow(List row) {
     var result = new User.fromJson({
       'id': row[0].toString(),
-      'username': row[1],
-      'email': row[2],
-      'password': row[3],
-      'salt': row[4],
-      'created_at': row[5],
-      'updated_at': row[6]
+      'email': row[1],
+      'name': row[2],
+      'created_at': row[3],
+      'updated_at': row[4]
     });
     return result;
   }
@@ -124,14 +121,9 @@ class UserQuery {
   }
 
   Stream<User> update(PostgreSQLConnection connection,
-      {String username,
-      String email,
-      String password,
-      String salt,
-      DateTime createdAt,
-      DateTime updatedAt}) {
+      {String email, String name, DateTime createdAt, DateTime updatedAt}) {
     var buf = new StringBuffer(
-        'UPDATE "users" SET ("username", "email", "password", "salt", "created_at", "updated_at") = (@username, @email, @password, @salt, @createdAt, @updatedAt) ');
+        'UPDATE "users" SET ("email", "name", "created_at", "updated_at") = (@email, @name, CAST (@createdAt AS timestamp), CAST (@updatedAt AS timestamp)) ');
     var whereClause = where.toWhereClause();
     if (whereClause != null) {
       buf.write(whereClause);
@@ -140,12 +132,10 @@ class UserQuery {
     var ctrl = new StreamController<User>();
     connection.query(
         buf.toString() +
-            ' RETURNING "id", "username", "email", "password", "salt", "created_at", "updated_at";',
+            ' RETURNING "id", "email", "name", "created_at", "updated_at";',
         substitutionValues: {
-          'username': username,
           'email': email,
-          'password': password,
-          'salt': salt,
+          'name': name,
           'createdAt': createdAt != null ? createdAt : __ormNow__,
           'updatedAt': updatedAt != null ? updatedAt : __ormNow__
         }).then((rows) async {
@@ -164,7 +154,7 @@ class UserQuery {
     StreamController<User> ctrl = new StreamController<User>();
     connection
         .query(toSql('DELETE FROM "users"') +
-            ' RETURNING "id", "username", "email", "password", "salt", "created_at", "updated_at";')
+            ' RETURNING "id", "email", "name", "created_at", "updated_at";')
         .then((rows) async {
       var futures = rows.map((row) async {
         var parsed = parseRow(row);
@@ -184,20 +174,16 @@ class UserQuery {
   }
 
   static Future<User> insert(PostgreSQLConnection connection,
-      {String username,
-      String email,
-      String password,
-      String salt,
+      {String email,
+      String name,
       DateTime createdAt,
       DateTime updatedAt}) async {
     var __ormNow__ = new DateTime.now();
     var result = await connection.query(
-        'INSERT INTO "users" ("username", "email", "password", "salt", "created_at", "updated_at") VALUES (@username, @email, @password, @salt, @createdAt, @updatedAt) RETURNING "id", "username", "email", "password", "salt", "created_at", "updated_at";',
+        'INSERT INTO "users" ("email", "name", "created_at", "updated_at") VALUES (@email, @name, CAST (@createdAt AS timestamp), CAST (@updatedAt AS timestamp)) RETURNING "id", "email", "name", "created_at", "updated_at";',
         substitutionValues: {
-          'username': username,
           'email': email,
-          'password': password,
-          'salt': salt,
+          'name': name,
           'createdAt': createdAt != null ? createdAt : __ormNow__,
           'updatedAt': updatedAt != null ? updatedAt : __ormNow__
         });
@@ -207,10 +193,8 @@ class UserQuery {
 
   static Future<User> insertUser(PostgreSQLConnection connection, User user) {
     return UserQuery.insert(connection,
-        username: user.username,
         email: user.email,
-        password: user.password,
-        salt: user.salt,
+        name: user.name,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt);
   }
@@ -220,10 +204,8 @@ class UserQuery {
     query.where.id.equals(int.parse(user.id));
     return query
         .update(connection,
-            username: user.username,
             email: user.email,
-            password: user.password,
-            salt: user.salt,
+            name: user.name,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt)
         .first;
@@ -237,13 +219,9 @@ class UserQueryWhere {
   final NumericSqlExpressionBuilder<int> id =
       new NumericSqlExpressionBuilder<int>();
 
-  final StringSqlExpressionBuilder username = new StringSqlExpressionBuilder();
-
   final StringSqlExpressionBuilder email = new StringSqlExpressionBuilder();
 
-  final StringSqlExpressionBuilder password = new StringSqlExpressionBuilder();
-
-  final StringSqlExpressionBuilder salt = new StringSqlExpressionBuilder();
+  final StringSqlExpressionBuilder name = new StringSqlExpressionBuilder();
 
   final DateTimeSqlExpressionBuilder createdAt =
       new DateTimeSqlExpressionBuilder('users.created_at');
@@ -256,17 +234,11 @@ class UserQueryWhere {
     if (id.hasValue) {
       expressions.add('users.id ' + id.compile());
     }
-    if (username.hasValue) {
-      expressions.add('users.username ' + username.compile());
-    }
     if (email.hasValue) {
       expressions.add('users.email ' + email.compile());
     }
-    if (password.hasValue) {
-      expressions.add('users.password ' + password.compile());
-    }
-    if (salt.hasValue) {
-      expressions.add('users.salt ' + salt.compile());
+    if (name.hasValue) {
+      expressions.add('users.name ' + name.compile());
     }
     if (createdAt.hasValue) {
       expressions.add(createdAt.compile());
@@ -278,4 +250,16 @@ class UserQueryWhere {
         ? null
         : ((keyword != false ? 'WHERE ' : '') + expressions.join(' AND '));
   }
+}
+
+class UserFields {
+  static const id = 'id';
+
+  static const email = 'email';
+
+  static const name = 'name';
+
+  static const createdAt = 'created_at';
+
+  static const updatedAt = 'updated_at';
 }

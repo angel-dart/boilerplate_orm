@@ -1,13 +1,15 @@
-import 'package:angel/angel.dart';
+import 'package:angel_framework/angel_framework.dart';
 import 'package:angel_migration_runner/angel_migration_runner.dart';
 import 'package:angel_migration_runner/postgres.dart';
-import 'package:angel_orm/angel_orm.dart';
-import 'migrations/user.dart';
+import 'package:angel_orm/server.dart';
+import 'package:angel/angel.dart';
+import 'migrations/foo.dart';
 
 main(List<String> args) async {
   // Get the application's connection pool, so that we can use the credentials
   // from our application configuration.
-  var app = await createServer();
+  var app = new Angel();
+  await app.configure(configureServer);
   var connectionPool =
       app.container.make(PostgreSQLConnectionPool) as PostgreSQLConnectionPool;
 
@@ -16,7 +18,7 @@ main(List<String> args) async {
   var migrationRunner = new PostgresMigrationRunner(
     await connectionPool.connector(),
     migrations: [
-      new UserMigration(),
+      new FooMigration(),
     ],
   );
 
